@@ -9,7 +9,6 @@
   },
   "workspaces": [
     "orchestrator",
-    "dashboard",
     "plugin",
     "test"
   ]

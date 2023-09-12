@@ -5,6 +5,7 @@ it('works', () => {
 
   cy.node('node-1').visit('http://localhost:3000/').nodeCompleted('visit');
   cy.node('node-2').visit('http://localhost:3000/').nodeCompleted('visit');
+  cy.node('node-3').visit('http://localhost:3000/').nodeCompleted('visit');
 
   cy.node('node-1')
     cy.log("Node 1 Step");

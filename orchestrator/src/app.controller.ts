@@ -10,7 +10,7 @@ export class AppController {
 
   private tasks: Map<string, NodeTask[]> = new Map<string, NodeTask[]>();
 
-  constructor(private readonly appService: AppService) {}
+  constructor() {}
 
   @Post("check/:runId")
   check(

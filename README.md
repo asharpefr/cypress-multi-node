@@ -14,8 +14,12 @@ yarn add -D cypress-system-integration
 
 ## Usage
 
+### Cypress Plugin
+
 Add this line to your project's `cypress/support/e2e.ts`:
 
 ```javascript
 import 'cypress-system-integration';
 ```
+
+### Orchestration Server

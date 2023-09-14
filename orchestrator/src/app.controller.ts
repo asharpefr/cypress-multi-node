@@ -1,5 +1,4 @@
 import {Body, Controller, Get, Param, Post, Put} from "@nestjs/common";
-import { AppService } from './app.service';
 
 type NodeTask = {node: string, taskId: string, timestamp: number};
 //Same as the plugin/index.d.ts
@@ -17,17 +16,17 @@ export class AppController {
     @Param("runId") runId: string,
     @Body() tasks: NodeTaskCheck[],
   ): { state: number } {
-    console.log('check', tasks );
+    // console.log('check', tasks );
     console.log('check-run', runId );
-    //COME BACK HERE, case when not found and timeout
+
     const exectasks = this.tasks.get(runId);
     let oneIsTimeout = false;
     let allCompleted = true;
     if(exectasks){
       for(const nt of tasks){
-        console.log(nt);
+        // console.log(nt);
         const f = exectasks.find(n => n.node === nt.node && n.taskId === nt.taskId)
-        console.log('nodetask', f);
+        // console.log('nodetask', f);
         if(f){
           if(f.timestamp + nt.timeout < Date.now()){
             oneIsTimeout = true;
@@ -97,6 +96,6 @@ export class AppController {
     };
     this.tasks.get(runId).push({node: nodeId, taskId: stepId, timestamp: Date.now()});
     console.log(`Spec completed: ${runId} ${nodeId} ${stepId}`);
-    console.log(this.tasks.get(runId));
+    // console.log(this.tasks.get(runId));
   }
 }

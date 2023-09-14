@@ -8,78 +8,82 @@ const skipCommand = (cmd) => {
 function skipRestOfTheChain(cmd) {
     while (
         cmd &&
-        cmd.attributes.name !== 'nodeCompleted'
+        cmd.attributes.name !== 'nodeChainEnd'
         ) {
         skipCommand(cmd)
         cmd = cmd.attributes.next
     }
 }
 
-function findMyNodeId(elseCommandAttributes) {
-    if (!elseCommandAttributes) {
+function getChainNodeId(cmdAttributes) {
+    if (!cmdAttributes) {
         return
     }
-    if (elseCommandAttributes.name === 'node') {
-        return elseCommandAttributes.args[0]
+    if (cmdAttributes.name === 'nodeChainStart') {
+        return cmdAttributes.args[0]
     }
-    // if (
-    //     !elseCommandAttributes.skip &&
-    //     !Cypress._.isNil(elseCommandAttributes.subject)
-    // ) {
-    //     return elseCommandAttributes.subject
-    // }
-    if (elseCommandAttributes.prev) {
-        return findMyNodeId(elseCommandAttributes.prev.attributes)
+    if (cmdAttributes.prev) {
+        return getChainNodeId(cmdAttributes.prev.attributes)
     }
 }
 
 const nodePrepare = function(subject, id, runId) {
     cy.wrap(id, { log: false }).as('nodeOrchastrationId');
     cy.wrap(runId, { log: false }).as('nodeOrchastrationRunId');
-    cy.request({url: `http://localhost:3001/prepare/${runId}/${id}`,
-        method: 'PUT', log: false}).then(
+
+    cy.request({url: `${Cypress.env('ORCHESTRATOR_URL')}/prepare/${runId}/${id}`,
+        method: 'PUT', log: true}).then(
         (response) => {
-
-            expect(response.body.state).not.to.equal('already-prepared')
-
+            // expect(response.body.state).not.to.equal('already-prepared')
         }
     )
+
+    // cy.wrap(null).then(() => {
+    //     // return a promise to cy.then() that
+    //     // is awaited until it resolves
+    //     return new Cypress.Promise((resolve, reject) => {
+    //         console.log('url');
+    //         fetch(`${Cypress.env('ORCHESTRATOR_URL')}/prepare/${runId}/${id}`, {
+    //             method: "GET", // or 'PUT'
+    //         }).then(()=> resolve())
+    //             .catch(() => reject());
+    //     }).then(() => console.log('prep'))
+    // })
 }
 Cypress.Commands.add('nodePrepare', { prevSubject: 'optional' }, nodePrepare);
 
 
-const nodeEnd = function(subject, id, runId) {
-
-    cy.request({url: `http://localhost:3001/end/${this.nodeOrchastrationRunId}/${this.nodeOrchastrationId}`,
+const nodeCompleted = function(subject, id, runId) {
+    cy.request({url: `${Cypress.env('ORCHESTRATOR_URL')}/end/${this.nodeOrchastrationRunId}/${this.nodeOrchastrationId}`,
         method: 'PUT', log: false}).then(
         (response) => {
         }
 
     )
 }
-Cypress.Commands.add('nodeEnd', { prevSubject: 'optional' }, nodeEnd);
+Cypress.Commands.add('nodeCompleted', { prevSubject: 'optional' }, nodeCompleted);
 
 
 
-const node = function(subject, id) {
+const nodeChainStart = function(subject, id) {
 
     const cmd = cy.state('current')
-
+    if(!id) id = this.this.nodeOrchastrationId;
     if(id !== this.nodeOrchastrationId){
         skipRestOfTheChain(cmd);
     }else{
         cy.log('Node:' + id);
     }
 }
-Cypress.Commands.add('node', { prevSubject: 'optional' }, node);
+Cypress.Commands.add('nodeChainStart', { prevSubject: 'optional' }, nodeChainStart);
 
-const nodeCompleted = function(subject, task) {
+const nodeChainEnd = function(subject, task) {
 
     const cmd = cy.state('current')
-    const id = findMyNodeId(cmd.attributes);
+    const id = getChainNodeId(cmd.attributes);
     if(id === this.nodeOrchastrationId){
         cy.log(id +' done:' + task );
-        cy.request({url: `http://localhost:3001/complete/${this.nodeOrchastrationRunId}/${id}/${task}`,
+        cy.request({url: `${Cypress.env('ORCHESTRATOR_URL')}/complete/${this.nodeOrchastrationRunId}/${id}/${task}`,
         method: 'PUT', log: false}).then(
             (response) => {
                 // response.body is automatically serialized into JSON
@@ -90,7 +94,7 @@ const nodeCompleted = function(subject, task) {
     }
 
 }
-Cypress.Commands.add('nodeCompleted', { prevSubject: 'optional' }, nodeCompleted);
+Cypress.Commands.add('nodeChainEnd', { prevSubject: true }, nodeChainEnd);
 
 
 const nodeWaitFor = function(subject, tasks){
@@ -119,7 +123,7 @@ const nodeWaitFor = function(subject, tasks){
     }
 
     const resolveValue = function(runId){
-        cy.request({url: `http://localhost:3001/check/${runId}`,
+        cy.request({url: `${Cypress.env('ORCHESTRATOR_URL')}/check/${runId}`,
             method: 'POST', log: false, body: tasks}).then(
             (response) => {
                 // response.body is automatically serialized into JSON

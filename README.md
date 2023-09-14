@@ -1,5 +1,5 @@
-<h1 align="center" style="border-bottom: none;">🔬 🔭 cypress-system-integration</h1>
-<h3 align="center">Bring Cypress End-2-End testing to the System Integration level</h3>
+<h1 align="center" style="border-bottom: none;">🔬 🔭 cypress-multi-node</h1>
+<h3 align="center">Bring Cypress End-2-End testing to the System Integration level over multiple nodes</h3>
 
 
 ## Why

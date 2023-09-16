@@ -1,15 +1,22 @@
 {
   "name": "cypress-multi-node-workspace",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "license": "MIT",
-  "scripts": {},
-  "private": true,
+  "scripts": {
+    "semantic-release": "semantic-release"
+  },
+  "private": false,
   "devDependencies": {
-    "lerna": "^7.2.0"
+    "lerna": "^7.2.0",
+    "semantic-release": "^21.1.1"
   },
   "workspaces": [
     "orchestrator",
     "plugin",
     "samples"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asharpefr/cypress-multi-node.git"
+  }
 }

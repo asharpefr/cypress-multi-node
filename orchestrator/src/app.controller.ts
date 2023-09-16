@@ -16,7 +16,6 @@ export class AppController {
     @Param("runId") runId: string,
     @Body() tasks: NodeTaskCheck[],
   ): { state: number } {
-    // console.log('check', tasks );
     console.log('check-run', runId );
 
     const exectasks = this.tasks.get(runId);
@@ -24,17 +23,13 @@ export class AppController {
     let allCompleted = true;
     if(exectasks){
       for(const nt of tasks){
-        // console.log(nt);
         const f = exectasks.find(n => n.node === nt.node && n.taskId === nt.taskId)
-        // console.log('nodetask', f);
         if(f){
           if(f.timestamp + nt.timeout < Date.now()){
             oneIsTimeout = true;
-            console.log("oneIsTimeout")
           }
         }else {
           allCompleted = false;
-          console.log("allCompleted = false")
         }
       }
 
@@ -96,6 +91,5 @@ export class AppController {
     };
     this.tasks.get(runId).push({node: nodeId, taskId: stepId, timestamp: Date.now()});
     console.log(`Spec completed: ${runId} ${nodeId} ${stepId}`);
-    // console.log(this.tasks.get(runId));
   }
 }

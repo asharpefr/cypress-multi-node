@@ -78,7 +78,6 @@ const nodeChainStart = function(subject, id) {
 Cypress.Commands.add('nodeChainStart', { prevSubject: 'optional' }, nodeChainStart);
 
 const nodeChainEnd = function(subject, task) {
-
     const cmd = cy.state('current')
     const id = getChainNodeId(cmd.attributes);
     if(id === this.nodeOrchastrationId){
@@ -88,11 +87,9 @@ const nodeChainEnd = function(subject, task) {
             (response) => {
                 // response.body is automatically serialized into JSON
                 expect(response.body)
-
             }
         )
     }
-
 }
 Cypress.Commands.add('nodeChainEnd', { prevSubject: true }, nodeChainEnd);
 
@@ -109,13 +106,15 @@ const nodeWaitFor = function(subject, tasks){
 
     const check = function(result) {
 
-        if (result.state === 0) {
+        if (result.state === 'all-completed') {
             return result
-        }else if (result.state === 2) {
-            expect(1).to.be.equal(5)
+        }else if (result.state === "one-timed-out") {
+            throw new Error('One timed out');
+        }else if (result.state === "not-all-completed") {
+            //WAITING
         }
         if (Date.now() >= endTime) {
-            throw new Error('One timed out');
+            throw new Error('Time out, didn\'t receive status from orchestrator');
         }
         cy.wait(100, { log: false }).then(function() {
             return resolveValue(this.nodeOrchastrationRunId)
@@ -126,7 +125,6 @@ const nodeWaitFor = function(subject, tasks){
         cy.request({url: `${Cypress.env('ORCHESTRATOR_URL')}/check/${runId}`,
             method: 'POST', log: false, body: tasks}).then(
             (response) => {
-                // response.body is automatically serialized into JSON
                 return check(response.body)
             }
         )

@@ -15,7 +15,7 @@ export class AppController {
   check(
     @Param("runId") runId: string,
     @Body() tasks: NodeTaskCheck[],
-  ): { state: number } {
+  ): { state: string } {
     console.log('check-run', runId );
 
     const exectasks = this.tasks.get(runId);
@@ -34,15 +34,15 @@ export class AppController {
       }
 
       if(oneIsTimeout){
-        return {state : 2};
+        return {state : "one-timed-out"};
       }
       if(!allCompleted){
-        return {state : 1};
+        return {state : 'not-all-completed'};
       }
 
-      return {state : 0};
+      return {state : "all-completed"};
     }
-    return {state : -1};
+    return {state : "no-run"};
   }
 
   @Put("prepare/:runId/:nodeId")

@@ -4,5 +4,5 @@
   "main": "index.js",
   "types": "index.d.ts",
   "license": "MIT",
-  "dependencies": {}
+  "gitHead": "76eb15466e3fd4056a54bcaa76172aa48807c53e"
 }

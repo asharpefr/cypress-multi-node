@@ -3,13 +3,12 @@
   "version": "0.1.0-development",
   "license": "MIT",
   "scripts": {
-    "publish-ci": "lerna publish from-package -y --no-verify-access"
+    "publish-ci": "lerna publish from-package -y"
   },
   "private": false,
   "devDependencies": {
     "lerna": "^7.2.0",
     "@changesets/cli": "^2.27.1"
-
   },
   "workspaces": [
     "orchestrator",

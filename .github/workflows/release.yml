@@ -31,10 +31,10 @@ jobs:
         run: npm audit signatures
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v1xs
         with:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: npm publish-ci
+          publish: npm run publish-ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

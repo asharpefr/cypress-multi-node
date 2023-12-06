@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - pre-main
+      - main
 
 permissions:
   contents: read # for checkout

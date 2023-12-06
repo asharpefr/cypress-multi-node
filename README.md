@@ -23,3 +23,9 @@ import 'cypress-system-integration';
 ```
 
 ### Orchestration Server
+
+```
+cd orchestrator
+npm run start
+```
+Note: A docker container will be provided in the future.

@@ -7,7 +7,7 @@
   },
   "private": false,
   "devDependencies": {
-    "lerna": "^7.2.0",
+    "lerna": "^8.0.0",
     "@changesets/cli": "^2.27.1"
   },
   "workspaces": [

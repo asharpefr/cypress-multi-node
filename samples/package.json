@@ -1,6 +1,7 @@
 {
   "name": "cypress-multi-node-samples",
   "version": "0.0.0",
+  "private": true,
   "devDependencies": {
     "cypress": "^13.1.0",
     "cypress-multi-node": "*",
